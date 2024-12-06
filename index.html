@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #homeworkChart, #labChart {
+            width: 200px;
+            height: 300px;
+            margin: 0 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .section {
+            width: 48%;
+            margin-bottom: 20px;
+        }
+
+        .full-width {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .centered-section {
+            width: 48%;
+        }
+
+        h3 {
+            color: #555;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Grade Calculator</h1>
+    <form id="gradeForm">
+        <div class="section">
+            <h3>Homeworks</h3>
+            <label for="homework1">Homework 1: </label>
+            <input type="number" id="homework1" placeholder="Out of 10" step="0.01">
+            <label for="homework2">Homework 2: </label>
+            <input type="number" id="homework2" placeholder="Out of 10" step="0.01">
+            <label for="homework3">Homework 3: </label>
+            <input type="number" id="homework3" placeholder="Out of 10" step="0.01">
+            <label for="homework4">Homework 4: </label>
+            <input type="number" id="homework4" placeholder="Out of 10" step="0.01">
+        </div>
+        <div class="section">
+            <h3>Programming Labs</h3>
+            <label for="lab1">Lab 1: </label>
+            <input type="number" id="lab1" placeholder="Out of 10" step="0.01">
+            <label for="lab2">Lab 2: </label>
+            <input type="number" id="lab2" placeholder="Out of 10" step="0.01">
+            <label for="lab3">Lab 3: </label>
+            <input type="number" id="lab3" placeholder="Out of 10" step="0.01">
+            <label for="lab4">Lab 4: </label>
+            <input type="number" id="lab4" placeholder="Out of 10" step="0.01">
+            <label for="lab5">Lab 5: </label>
+            <input type="number" id="lab5" placeholder="Out of 10" step="0.01">
+        </div>
+        <div class="full-width">
+            <div class="centered-section">
+                <h3>Other Categories</h3>
+                <label for="finalProject">Final Project: </label>
+                <input type="number" id="finalProject">
+                <label for="exam1">Exam 1: </label>
+                <input type="number" id="exam1">
+                <label for="exam2">Exam 2: </label>
+                <input type="number" id="exam2">
+                <label for="inClassWork">In-Class Work: </label>
+                <input type="number" id="inClassWork" placeholder="Out of 10">
+            </div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+    <p>Not all fields have to be filled</p>
+    <script>
+        document.getElementById('gradeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Helper function to parse input values
+            function parseInput(id) {
+                const value = document.getElementById(id).value;
+                return value ? parseFloat(value) : null;
+            }
+
+            // Get scores
+            const homeworkScores = [
+                parseInput('homework1'),
+                parseInput('homework2'),
+                parseInput('homework3'),
+                parseInput('homework4')
+            ].filter(score => score !== null);
+
+            const labScores = [
+                parseInput('lab1'),
+                parseInput('lab2'),
+                parseInput('lab3'),
+                parseInput('lab4'),
+                parseInput('lab5')
+            ].filter(score => score !== null);
+
+            const finalProject = parseInput('finalProject');
+            const exam1 = parseInput('exam1');
+            const exam2 = parseInput('exam2');
+            const inClassWork = parseInput('inClassWork');
+
+            // Calculate lost percentage points
+            const lostPoints = {
+                homeworks: homeworkScores.reduce((a, b) => a + (10 - b) * 0.5, 0),
+                labs: labScores.reduce((a, b) => a + (10 - b) * 0.6, 0),
+                finalProject: finalProject !== null ? (10 - finalProject) : 0,
+                exam1: exam1 !== null ? (15 - (exam1 / 100) * 15) : 0,
+                exam2: exam2 !== null ? (15 - (exam2 / 100) * 15) : 0,
+                inClassWork: inClassWork !== null ? (10 - inClassWork) : 0
+            };
+
+            const totalLostPoints = Object.values(lostPoints).reduce((a, b) => a + b, 0);
+            const maxPossibleScore = 100 - totalLostPoints;
+
+            // Display the result on the webpage
+            document.getElementById('result').textContent = `Maximum Possible Score: ${maxPossibleScore.toFixed(2)}`;
+        });
+    </script>
+</body>
+</html>
